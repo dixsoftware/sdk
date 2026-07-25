@@ -1,0 +1,82 @@
+{
+  "name": "@dixbase/payments",
+  "version": "1.0.0",
+  "description": "SDK oficial de DixBase para aceptar pagos y gestionar sesiones de checkout.",
+  "license": "MIT",
+  "author": "DixBase",
+  "homepage": "https://github.com/dixsoftware/sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dixsoftware/sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dixsoftware/sdk/issues"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "dixbase": "./dist/cli.cjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "dotnet",
+    "go",
+    "java",
+    "laravel",
+    "bin",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "openapi",
+    "plugins",
+    "postman",
+    "python",
+    "ruby",
+    "SECURITY.md",
+    "docs",
+    "examples"
+  ],
+  "packageManager": "npm@10",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts --format esm,cjs --dts --clean --sourcemap && node scripts/fix-cli.cjs",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build && npm audit --omit=dev",
+    "test": "vitest run",
+    "test:integration": "vitest run tests/integration.test.ts",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "dixbase",
+    "payments",
+    "checkout",
+    "crypto",
+    "sdk"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.6"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1",
+    "vite": "6.4.3"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "dixbase-next-starter",
+  "private": true,
+  "scripts": {
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "@dixbase/payments": "^1.0.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

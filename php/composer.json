@@ -1,0 +1,34 @@
+{
+  "name": "dixbase/payments",
+  "description": "SDK PHP de DixBase para aceptar pagos y gestionar sesiones de checkout.",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/dixsoftware/sdk",
+  "support": {
+    "issues": "https://github.com/dixsoftware/sdk/issues",
+    "source": "https://github.com/dixsoftware/sdk/tree/main/php"
+  },
+  "authors": [
+    {
+      "name": "DixBase"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DixBase\\Payments\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-hash": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  },
+  "scripts": {
+    "lint": "php -l src/DixBase.php && php -l src/CheckoutClient.php && php -l src/DixBaseException.php && php -l src/HttpClient.php && php -l src/Webhooks.php && php -l src/WebhookSignatureException.php",
+    "test": "phpunit"
+  }
+}

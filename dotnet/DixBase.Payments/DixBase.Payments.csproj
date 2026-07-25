@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>DixBase.Payments</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>DixBase</Authors>
+    <Description>DixBase payments SDK for .NET.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/dixsoftware/sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dixsoftware/sdk</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>dixbase;payments;checkout;crypto</PackageTags>
+  </PropertyGroup>
+</Project>

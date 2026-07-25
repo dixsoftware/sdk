@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dixbase-payments"
+version = "1.0.0"
+description = "DixBase payments SDK for Python."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "DixBase" }]
+dependencies = ["requests>=2.31.0"]
+keywords = ["dixbase", "payments", "checkout", "crypto"]
+
+[project.urls]
+Homepage = "https://github.com/dixsoftware/sdk"
+Documentation = "https://github.com/dixsoftware/sdk/tree/main/docs"
+Repository = "https://github.com/dixsoftware/sdk"
+Issues = "https://github.com/dixsoftware/sdk/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0", "responses>=0.25.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

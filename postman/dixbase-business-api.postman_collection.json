@@ -1,0 +1,60 @@
+{
+  "info": {
+    "name": "DixBase Business API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://app.dixbase.com/v1/business/api" },
+    { "key": "api_key", "value": "dbx_live_xxxxx" },
+    { "key": "currency_id", "value": "cur_xxxxx" }
+  ],
+  "item": [
+    {
+      "name": "List currencies",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{api_key}}" }],
+        "url": "{{base_url}}/checkout/currencies"
+      }
+    },
+    {
+      "name": "Create sandbox checkout",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Idempotency-Key", "value": "postman-sandbox-{{$timestamp}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Postman sandbox\",\n  \"amount\": 10,\n  \"currency\": \"{{currency_id}}\",\n  \"force_status\": \"open\"\n}"
+        },
+        "url": "{{base_url}}/sandbox/checkout/sessions"
+      }
+    },
+    {
+      "name": "Preview sandbox webhook",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"event\": \"checkout.session.completed\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}"
+        },
+        "url": "{{base_url}}/sandbox/webhooks/preview"
+      }
+    },
+    {
+      "name": "List webhook deliveries",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{api_key}}" }],
+        "url": "{{base_url}}/webhooks/deliveries?limit=20"
+      }
+    }
+  ]
+}

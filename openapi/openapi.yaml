@@ -1,0 +1,436 @@
+openapi: 3.1.0
+info:
+  title: DixBase Business Checkout API
+  version: 1.0.0
+  description: Hosted checkout, sandbox and signed webhook API for DixBase business payments.
+servers:
+  - url: https://app.dixbase.com/v1/business/api
+    description: Production API
+security:
+  - bearerAuth: []
+paths:
+  /checkout/currencies:
+    get:
+      operationId: listCheckoutCurrencies
+      summary: List checkout currencies
+      tags: [Checkout]
+      responses:
+        "200":
+          description: Available currencies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutCurrencyList"
+  /checkout/sessions:
+    get:
+      operationId: listCheckoutSessions
+      summary: List checkout sessions
+      tags: [Checkout]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/CheckoutSessionStatus"
+      responses:
+        "200":
+          description: Checkout sessions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSessionList"
+    post:
+      operationId: createCheckoutSession
+      summary: Create checkout session
+      tags: [Checkout]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutSession"
+      responses:
+        "201":
+          description: Checkout session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+  /checkout/sessions/{checkout_id}:
+    get:
+      operationId: retrieveCheckoutSession
+      summary: Retrieve checkout session
+      tags: [Checkout]
+      parameters:
+        - $ref: "#/components/parameters/CheckoutId"
+      responses:
+        "200":
+          description: Checkout session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+  /checkout/sessions/{checkout_id}/cancel:
+    post:
+      operationId: cancelCheckoutSession
+      summary: Cancel checkout session
+      tags: [Checkout]
+      parameters:
+        - $ref: "#/components/parameters/CheckoutId"
+      responses:
+        "200":
+          description: Canceled checkout session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+  /sandbox/checkout/sessions:
+    post:
+      operationId: createSandboxCheckoutSession
+      summary: Create sandbox checkout session
+      tags: [Sandbox]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/CreateCheckoutSession"
+                - type: object
+                  properties:
+                    force_status:
+                      $ref: "#/components/schemas/CheckoutSessionStatus"
+      responses:
+        "201":
+          description: Sandbox checkout session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SandboxCheckoutSession"
+  /sandbox/webhooks/preview:
+    post:
+      operationId: previewSandboxWebhook
+      summary: Preview signed sandbox webhook
+      tags: [Sandbox]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SandboxWebhookPreviewRequest"
+      responses:
+        "200":
+          description: Signed webhook preview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SandboxWebhookPreview"
+  /webhooks/deliveries:
+    get:
+      operationId: listWebhookDeliveries
+      summary: List webhook deliveries
+      description: Requires the `webhooks:read` scope.
+      tags: [Webhooks]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/WebhookDeliveryStatus"
+      responses:
+        "200":
+          description: Webhook delivery attempts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookDeliveryList"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 255
+    CheckoutId:
+      name: checkout_id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: chk_8f1c2d3e4a5b6c7d8e9f
+  schemas:
+    CheckoutSessionStatus:
+      type: string
+      enum: [open, complete, expired, canceled]
+    PaymentStatus:
+      type: string
+      enum: [unpaid, paid]
+    WebhookDeliveryStatus:
+      type: string
+      enum: [pending, retrying, delivered, failed]
+    CreateCheckoutSession:
+      type: object
+      required: [name, amount]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 500
+        amount:
+          type: number
+          exclusiveMinimum: 0
+        currency:
+          type: string
+          description: DixBase currency id such as cur_xxxxx.
+        accepted_currencies:
+          type: array
+          items:
+            type: string
+        wallet:
+          type: string
+          description: Optional DixBase wallet id such as wal_xxxxx.
+        customer_email:
+          type: string
+        success_url:
+          type: string
+          format: uri
+        cancel_url:
+          type: string
+          format: uri
+        client_reference_id:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        expires_in_minutes:
+          type: integer
+          minimum: 10
+          maximum: 1440
+          default: 30
+    CheckoutSession:
+      type: object
+      required: [id, object, status, payment_status, amount, currency, checkout_url, invoice_id]
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          const: checkout.session
+        status:
+          $ref: "#/components/schemas/CheckoutSessionStatus"
+        payment_status:
+          $ref: "#/components/schemas/PaymentStatus"
+        mode:
+          type: string
+          default: payment
+        amount:
+          type: string
+        currency:
+          type: string
+        customer_email:
+          type: [string, "null"]
+        client_reference_id:
+          type: [string, "null"]
+        metadata:
+          type: object
+          additionalProperties: true
+        checkout_url:
+          type: string
+          format: uri
+        invoice_id:
+          type: string
+        success_url:
+          type: [string, "null"]
+        cancel_url:
+          type: [string, "null"]
+        created_at:
+          type: string
+        expires_at:
+          type: string
+        completed_at:
+          type: [string, "null"]
+        canceled_at:
+          type: [string, "null"]
+        livemode:
+          type: boolean
+    SandboxCheckoutSession:
+      allOf:
+        - $ref: "#/components/schemas/CheckoutSession"
+        - type: object
+          properties:
+            livemode:
+              const: false
+            webhook_event:
+              type: object
+              additionalProperties: true
+            webhook_signature:
+              type: string
+    CheckoutCurrencyList:
+      type: object
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CheckoutCurrency"
+    CheckoutCurrency:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        ticker:
+          type: string
+        decimals:
+          type: integer
+        image:
+          type: [string, "null"]
+        networks:
+          type: array
+          items:
+            $ref: "#/components/schemas/CheckoutNetwork"
+    CheckoutNetwork:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        handler:
+          type: string
+        contract:
+          type: [string, "null"]
+        decimals:
+          type: integer
+        confirmations:
+          type: [integer, "null"]
+    CheckoutSessionList:
+      type: object
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CheckoutSession"
+        has_more:
+          type: boolean
+    SandboxWebhookPreviewRequest:
+      type: object
+      required: [event, amount]
+      properties:
+        event:
+          type: string
+          enum:
+            - checkout.session.created
+            - checkout.session.completed
+            - checkout.session.expired
+            - checkout.session.canceled
+            - payment.succeeded
+            - payment.failed
+        checkout_id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+          default: EUR
+        client_reference_id:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    SandboxWebhookPreview:
+      type: object
+      properties:
+        object:
+          type: string
+          const: sandbox.webhook_preview
+        livemode:
+          type: boolean
+          const: false
+        payload:
+          type: object
+          additionalProperties: true
+        signature:
+          type: string
+        signing_secret:
+          type: string
+    WebhookDeliveryList:
+      type: object
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebhookDelivery"
+        has_more:
+          type: boolean
+    WebhookDelivery:
+      type: object
+      required: [id, event_id, event_type, status, attempts, created_at, updated_at]
+      properties:
+        id:
+          type: string
+        event_id:
+          type: string
+        event_type:
+          type: string
+        status:
+          $ref: "#/components/schemas/WebhookDeliveryStatus"
+        attempts:
+          type: integer
+        webhook_id:
+          type: [string, "null"]
+        url:
+          type: [string, "null"]
+        last_http_status:
+          type: [integer, "null"]
+        last_error:
+          type: [string, "null"]
+        last_response_body:
+          type: [string, "null"]
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        next_retry_at:
+          type: [string, "null"]
+        delivered_at:
+          type: [string, "null"]
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string

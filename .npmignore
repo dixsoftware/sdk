@@ -1,0 +1,11 @@
+node_modules/
+coverage/
+*.tgz
+.env
+.DS_Store
+npm-debug.log*
+dotnet/**/bin/
+dotnet/**/obj/
+java/target/
+python/.pytest_cache/
+python/**/__pycache__/
