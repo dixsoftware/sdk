@@ -6,7 +6,13 @@ module DixBasePayments
   class Client
     def initialize(api_key:, base_url: "https://app.dixbase.com/v1")
       @api_key = api_key
-      @base_url = base_url.sub(/\/+$/, "")
+      @base_url = self.class.strip_trailing_slashes(base_url)
+    end
+
+    def self.strip_trailing_slashes(value)
+      end_index = value.length
+      end_index -= 1 while end_index.positive? && value.getbyte(end_index - 1) == 47
+      end_index == value.length ? value : value[0...end_index]
     end
 
     def currencies
