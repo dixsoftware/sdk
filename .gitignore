@@ -16,6 +16,7 @@ dotnet/**/bin/
 dotnet/**/obj/
 java/**/*.class
 java/target/
+rust/target/
 ruby/*.gem
 .env
 .DS_Store

@@ -10,6 +10,7 @@ Antes de crear un release, actualiza la misma version en:
 - `python/pyproject.toml`
 - `dotnet/DixBase.Payments/DixBase.Payments.csproj`
 - `java/pom.xml`
+- `rust/Cargo.toml`
 - `ruby/dixbase_payments.gemspec`
 - `CHANGELOG.md`
 
@@ -23,6 +24,7 @@ Configura estos secrets en el repositorio:
 - `PYPI_TOKEN`: token de PyPI para publicar `dixbase-payments`.
 - `NUGET_API_KEY`: opcional; publica `DixBase.Payments` en NuGet si esta configurado.
 - `RUBYGEMS_API_KEY`: opcional; publica `dixbase_payments` en RubyGems si esta configurado.
+- `CARGO_REGISTRY_TOKEN`: opcional; publica `dixbase-payments` en crates.io si esta configurado.
 
 Packagist normalmente no requiere publicar desde Actions: registra el repositorio en Packagist y deja que lea los tags.
 
@@ -39,6 +41,10 @@ npm test
 npm run build
 npm audit --omit=dev
 npm pack --dry-run
+cd rust
+cargo fmt --check
+cargo test
+cargo clippy --all-targets -- -D warnings
 ```
 
 Para integracion real con DixBase:
@@ -65,6 +71,7 @@ El workflow:
 
 - publica `@dixbase/payments` en npm;
 - construye y publica `dixbase-payments` en PyPI;
+- construye y, si hay token, publica `dixbase-payments` en crates.io;
 - construye y, si hay token, publica `DixBase.Payments` en NuGet;
 - construye y, si hay token, publica `dixbase_payments` en RubyGems;
 - construye el paquete Java y lo adjunta al release;
@@ -93,6 +100,16 @@ Los usuarios pueden instalarlo desde el tag del repo:
 ```bash
 go get github.com/dixsoftware/sdk/go@v1.0.0
 ```
+
+## Rust
+
+El paquete Rust usa:
+
+```text
+dixbase-payments
+```
+
+Cuando `CARGO_REGISTRY_TOKEN` este configurado, el workflow publica el crate en crates.io al crear un tag `vX.Y.Z`.
 
 ## WooCommerce
 

@@ -9,3 +9,4 @@ dotnet/**/obj/
 java/target/
 python/.pytest_cache/
 python/**/__pycache__/
+rust/target/
