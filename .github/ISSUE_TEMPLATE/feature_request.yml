@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest an SDK, documentation, API tooling, or plugin improvement.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Node SDK
+        - PHP SDK
+        - Python SDK
+        - Go SDK
+        - Java SDK
+        - .NET SDK
+        - Ruby SDK
+        - Laravel package
+        - WooCommerce plugin
+        - Documentation
+        - OpenAPI/Postman
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What developer or merchant workflow should be improved?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should change?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false

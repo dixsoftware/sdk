@@ -1,0 +1,61 @@
+name: Bug report
+description: Report a reproducible SDK, API, documentation, or plugin problem.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting a problem. Do not include API keys, webhook secrets, customer data, or private logs.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Node SDK
+        - PHP SDK
+        - Python SDK
+        - Go SDK
+        - Java SDK
+        - .NET SDK
+        - Ruby SDK
+        - Laravel package
+        - WooCommerce plugin
+        - API documentation
+        - OpenAPI/Postman
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: SDK or plugin version
+      placeholder: "1.0.0"
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest set of steps that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include runtime, framework, OS, package manager, and relevant versions.
+    validations:
+      required: false
