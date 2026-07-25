@@ -1,4 +1,5 @@
 import express from "express";
+import rateLimit from "express-rate-limit";
 import { DixBase } from "@dixbase/payments";
 
 const app = express();
@@ -6,7 +7,21 @@ const dixbase = new DixBase({
   apiKey: process.env.DIXBASE_API_KEY!
 });
 
-app.post("/checkout", express.json(), async (req, res, next) => {
+const checkoutLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 30,
+  standardHeaders: "draft-7",
+  legacyHeaders: false
+});
+
+const webhookLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 300,
+  standardHeaders: "draft-7",
+  legacyHeaders: false
+});
+
+app.post("/checkout", checkoutLimiter, express.json(), async (req, res, next) => {
   try {
     const session = await dixbase.checkout.create({
       name: "Plan Professional",
@@ -27,7 +42,7 @@ app.post("/checkout", express.json(), async (req, res, next) => {
   }
 });
 
-app.post("/webhooks/dixbase", express.raw({ type: "application/json" }), (req, res) => {
+app.post("/webhooks/dixbase", webhookLimiter, express.raw({ type: "application/json" }), (req, res) => {
   const signature = req.header("X-DixBase-Signature");
 
   try {

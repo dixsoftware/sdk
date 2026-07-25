@@ -42,6 +42,7 @@
     "plugins",
     "postman",
     "python",
+    "rust",
     "ruby",
     "SECURITY.md",
     "docs",

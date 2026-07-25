@@ -7,4 +7,5 @@
 - Added webhook signature verification for `X-DixBase-Signature`.
 - Added sandbox webhook preview helper.
 - Added PHP Composer SDK under `php/`.
+- Added Rust SDK under `rust/`.
 - Added unit tests, integration test harness, CI workflow and publication docs.

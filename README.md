@@ -34,6 +34,7 @@ Experimental:
 - Go SDK
 - .NET SDK
 - Java SDK
+- Rust SDK
 - Ruby SDK
 - Laravel package
 - WooCommerce plugin
@@ -303,6 +304,24 @@ session = dixbase.checkout.create({
 })
 ```
 
+## SDK Rust
+
+Tambien se incluye un SDK Rust publicable en crates.io como `dixbase-payments`:
+
+```rust
+use dixbase_payments::DixBase;
+use serde_json::json;
+
+let dixbase = DixBase::new(std::env::var("DIXBASE_API_KEY")?)?;
+let session = dixbase.checkout().create(json!({
+    "name": "Order #1001",
+    "amount": 49.90,
+    "currency": "cur_xxxxx",
+    "successUrl": "https://miweb.com/success",
+    "cancelUrl": "https://miweb.com/cancel"
+})).await?;
+```
+
 ## CLI
 
 Despues de instalar el paquete globalmente:
@@ -328,6 +347,7 @@ Esta carpeta tambien incluye paquetes para los ecosistemas mas usados:
 - `go/` para Go modules (`github.com/dixsoftware/sdk/go`)
 - `dotnet/` para NuGet
 - `java/` para Maven Central
+- `rust/` para crates.io
 - `ruby/` para RubyGems
 - `laravel/` para Packagist/Laravel
 
@@ -384,6 +404,7 @@ Mas documentacion:
 - `docs/api-reference.md`
 - `docs/node-sdk.md`
 - `docs/php-sdk.md`
+- `docs/rust-sdk.md`
 - `docs/integration-testing.md`
 - `docs/publishing.md`
 
@@ -394,4 +415,4 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-El workflow de release publica npm/PyPI, empaqueta NuGet/Ruby/Java/WooCommerce y adjunta OpenAPI/Postman al release. Ver `docs/publishing.md`.
+El workflow de release publica npm/PyPI/crates.io, empaqueta NuGet/Ruby/Java/WooCommerce y adjunta OpenAPI/Postman al release. Ver `docs/publishing.md`.
